@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  finanzasapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GEMINI_API_KEY: ${GEMINI_API_KEY}
+    container_name: finanzasapp
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - proxy_network
+    labels:
+      # - "traefik.enable=true"
+      # - "traefik.http.routers.finanzasapp.rule=Host(`william-as.com`) && PathPrefix(`/finanzasapp`)"
+      # - "traefik.http.routers.finanzasapp.entrypoints=web"
+      # - "traefik.http.services.finanzasapp.loadbalancer.server.port=80"
+      - "traefik.enable=true"
+
+      # -------------------------
+      # HTTP → HTTPS
+      # -------------------------
+      - "traefik.http.routers.finanzasapp-http.rule=Host(`william-as.com`) && PathPrefix(`/finanzasapp`)"
+      - "traefik.http.routers.finanzasapp-http.entrypoints=web"
+      - "traefik.http.routers.finanzasapp-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      # -------------------------
+      # HTTPS
+      # -------------------------
+      - "traefik.http.routers.finanzasapp.rule=Host(`william-as.com`) && PathPrefix(`/finanzasapp`)"
+      - "traefik.http.routers.finanzasapp.entrypoints=websecure"
+      - "traefik.http.routers.finanzasapp.tls.certresolver=myresolver"
+
+      # -------------------------
+      # Strip Prefix /finanzasapp
+      # -------------------------
+      - "traefik.http.routers.finanzasapp.middlewares=finanzasapp-strip"
+      - "traefik.http.middlewares.finanzasapp-strip.stripprefix.prefixes=/finanzasapp"
+
+      # -------------------------
+      # Servicio interno
+      # -------------------------
+      - "traefik.http.services.finanzasapp.loadbalancer.server.port=80"
+
+networks:
+  proxy_network:
+    external: true
