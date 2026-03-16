@@ -10,13 +10,28 @@ const screenshots = [
   { src: asset('screen-4-1.png'), title: 'Transacciones, ingresos y egresos' },
   { src: asset('screen-5.png'), title: 'Tabla de amortización' },
   { src: asset('screen-6.png'), title: 'Proximos pagos' },
-  { src: asset('screen-7.png'), title: 'Widget del balance del mes actual' }
+  { src: asset('screen-7.png'), title: 'Widget del balance del mes actual' },
+  { src: asset('screen-8.png'), title: 'Ingreso/Egresos' },
+  { src: asset('screen-9.png'), title: 'Registro de pagos' }
+];
+
+const featureItems = [
+  { title: 'Acceso rápido', description: 'Resumen semanal y mensual de tus finanzas.', image: screenshots[1].src },
+  { title: 'Registro transacciones', description: 'Guarda tus ingresos y egresos de manera sencilla.', image: screenshots[3].src },
+  { title: 'Filtros inteligentes', description: 'Encuentra movimientos por tipo o fecha.', image: screenshots[4].src },
+  { title: 'Gráficas claras', description: 'Visualiza cómo se distribuyen tus gastos por categorías.', image: screenshots[2].src },
+  { title: 'Widget del balance actual', description: 'Consulta el balance del mes actual de un vistazo.', image: screenshots[7].src },
+  { title: 'Tabla de amortización', description: 'Define las cuotas y plazos de tus préstamos.', image: screenshots[5].src },
+  { title: 'Próximos pagos', description: 'Visualiza los pagos pendientes y sus fechas.', image: screenshots[6].src },
+  { title: 'Ingreso/Egresos', description: 'Consulta tus ingresos y egresos de manera detallada.', image: screenshots[8].src }
 ];
 
 export default function App() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [activeFeature, setActiveFeature] = useState(0);
   const goPrev = () => setActiveSlide((prev) => (prev === 0 ? screenshots.length - 1 : prev - 1));
   const goNext = () => setActiveSlide((prev) => (prev === screenshots.length - 1 ? 0 : prev + 1));
+  const visibleScreens = Array.from({ length: 4 }, (_, offset) => screenshots[(activeSlide + offset) % screenshots.length]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -26,31 +41,43 @@ export default function App() {
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    const sections = document.querySelectorAll('[data-reveal-section]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="page">
-      <header className="hero">
+      <header className="hero" id="inicio">
+        <div className="topbar">
+          <div className="brand">
+            <img src={asset('icono.png')} alt="Icono de Econiqo" className="brand-icon" />
+            <span>Econiqo</span>
+          </div>
+          <nav className="top-nav" aria-label="Secciones principales">
+            <a href="#inicio">Inicio</a>
+            <a href="#caracteristicas">Características</a>
+            <a href="#screenshots">Capturas de pantalla</a>
+          </nav>
+        </div>
 
-
-        <div className="container hero-content">
-          <div className="hero-copy">  
-            <h1 className="hero-title">
-              <img src={asset('icono.png')} alt="Icono de Econiqo" className="brand-icon hero-title-icon" />
-              <span className="hero-title-text">Econiqo</span>
-            </h1>
-            <p className="kicker">Finanzas personales - Inteligencia para tu dinero</p>
-            <p className="description">
-              Aplicación para gestionar de manera integral las finanzas personales,
-              permitiendo registrar y controlar ingresos y egresos de forma segura,
-              sin depender de conexión a internet ni compartir información con terceros.
-              La información se almacena y procesa localmente, garantizando privacidad,
-              autonomía y total confidencialidad en la administración financiera del usuario.
-            </p>
-
-            <ul className="trust-points">
-              <li>Datos almacenados localmente</li>
-              <li>Sin nube obligatoria</li>
-              <li>Sin vender tu información</li>
-            </ul>
+        <div className="container hero-content section-reveal" data-reveal-section>
+          <div className="hero-copy">
+            <p className="hero-lead">La forma más sencilla de gestionar<br /> tus finanzas personales</p>
+            <h1 className="hero-app-name">Econiqo</h1>
 
             <div className="cta-row">
               <a className="store-btn appstore" href="#" aria-label="Descargar en App Store">
@@ -63,14 +90,8 @@ export default function App() {
                   <small>Disponible en</small>
                   <strong>App Store</strong>
                 </span>
-                <span className="store-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M7 17L17 7" />
-                    <path d="M8 7h9v9" />
-                  </svg>
-                </span>
               </a>
-              <a className="store-btn playstore" href="#" aria-label="Descargar en Google Play">
+              <a className="store-btn playstore" href="https://play.google.com/store/apps/details?id=app.econiqo.com" aria-label="Descargar en Google Play">
                 <span className="store-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
                     <polygon points="3,2 14,12 3,22" fill="#34A853" />
@@ -83,62 +104,93 @@ export default function App() {
                   <small>Disponible en</small>
                   <strong>Google Play</strong>
                 </span>
-                <span className="store-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M7 17L17 7" />
-                    <path d="M8 7h9v9" />
-                  </svg>
-                </span>
               </a>
             </div>
           </div>
 
-        <section className="hero-slider">
-          <div className="slider-wrap">
-            <button className="slider-arrow" onClick={goPrev} aria-label="Imagen anterior">‹</button>
-
-            <div className="slider-viewport">
-              <div className="slider-track" style={{ transform: `translateX(-${activeSlide * 100}%)` }}>
-                {screenshots.map((item, index) => (
-                  <figure key={item.src} className="slide-item">
-                    <img className="slide-image" src={item.src} alt={`Pantalla ${index + 1} de Econiqo`} loading="lazy" />
-                    <figcaption>{item.title}</figcaption>
-                  </figure>
-                ))}
-              </div>
-            </div>
-
-            <button className="slider-arrow" onClick={goNext} aria-label="Siguiente imagen">›</button>
+          <div className="hero-showcase" aria-label="Vista previa de la app">
+            <figure className="hero-shot hero-shot-left">
+              <img src={asset('screen-1.png')} alt="Pantalla principal de Econiqo" loading="lazy" />
+            </figure>
+            <figure className="hero-shot hero-shot-center">
+              <img src={asset('screen-2.png')} alt="Pantalla de resumen financiero" loading="lazy" />
+            </figure>
+            <figure className="hero-shot hero-shot-right">
+              <img src={asset('screen-7.png')} alt="Widget del balance del mes" loading="lazy" />
+            </figure>
           </div>
-
-          <div className="slider-dots" aria-label="Navegación del slider">
-            {screenshots.map((item, index) => (
-              <button
-                key={item.src}
-                className={`dot ${activeSlide === index ? 'active' : ''}`}
-                onClick={() => setActiveSlide(index)}
-                aria-label={`Ir a la imagen ${index + 1}`}
-              />
-            ))}
-          </div>
-        </section>
         </div>
       </header>
 
       <main>
-        <section className="features container">
-          <article>
-            <h3>100% Privado</h3>
-            <p>Los datos viven en tu dispositivo. Sin compartir información con terceros.</p>
-          </article>
-          <article>
-            <h3>Funciona Offline</h3>
-            <p>Registra y consulta tus movimientos sin internet, en cualquier momento.</p>
-          </article>
-          <article>
-            <h3>Control Total</h3>
-            <p>Visualiza ingresos y egresos para tomar mejores decisiones financieras.</p>
-          </article>
+        <section id="caracteristicas" className="features container section-reveal" data-reveal-section>
+          <div className="features-col">
+            {featureItems.slice(0, 4).map((item, index) => (
+              <button
+                key={item.title}
+                className={`feature-btn ${activeFeature === index ? 'active' : ''}`}
+                onClick={() => setActiveFeature(index)}
+                onMouseEnter={() => setActiveFeature(index)}
+                onFocus={() => setActiveFeature(index)}
+                type="button"
+              >
+                <span className="feature-icon" aria-hidden="true">◉</span>
+                <span>
+                  <strong>{item.title}</strong>
+                  <small>{item.description}</small>
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div className="features-center" aria-live="polite">
+            <img src={featureItems[activeFeature].image} alt={featureItems[activeFeature].title} loading="lazy" />
+          </div>
+
+          <div className="features-col">
+            {featureItems.slice(4).map((item, idx) => {
+              const index = idx + 4;
+              return (
+                <button
+                  key={item.title}
+                  className={`feature-btn ${activeFeature === index ? 'active' : ''}`}
+                  onClick={() => setActiveFeature(index)}
+                  onMouseEnter={() => setActiveFeature(index)}
+                  onFocus={() => setActiveFeature(index)}
+                  type="button"
+                >
+                  <span className="feature-icon" aria-hidden="true">◉</span>
+                  <span>
+                    <strong>{item.title}</strong>
+                    <small>{item.description}</small>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section id="screenshots" className="gallery gallery-dark">
+          <div className="container section-reveal" data-reveal-section>
+
+            <div className="hero-slider dark-slider">
+              <div className="slider-wrap">
+                <button className="slider-arrow" onClick={goPrev} aria-label="Imagen anterior">‹</button>
+
+                <div className="slider-viewport dark-viewport">
+                  <div className="screens-row">
+                    {visibleScreens.map((item, index) => (
+                      <figure key={`${item.src}-${activeSlide}-${index}`} className={`screen-card ${index === 1 ? 'featured' : ''}`}>
+                        <img className="screen-image" src={item.src} alt={item.title} loading="lazy" />
+                      </figure>
+                    ))}
+                  </div>
+                </div>
+
+                <button className="slider-arrow" onClick={goNext} aria-label="Siguiente imagen">›</button>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
 
