@@ -80,7 +80,7 @@ export default function App() {
             <h1 className="hero-app-name">Econiqo</h1>
 
             <div className="cta-row">
-              <a className="store-btn appstore" href="#" aria-label="Descargar en App Store">
+              <a className="store-btn appstore" href="https://apps.apple.com/ec/app/econiqo-finanzas-personales/id6760971564" aria-label="Descargar en App Store">
                 <span className="store-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17.57 12.63c.02 2.36 2.07 3.15 2.09 3.16-.02.06-.33 1.15-1.1 2.27-.67.97-1.37 1.95-2.47 1.97-1.08.02-1.43-.65-2.67-.65-1.24 0-1.63.63-2.65.67-1.05.04-1.85-1.05-2.53-2.01-1.4-2.01-2.46-5.68-1.03-8.17.71-1.24 1.98-2.03 3.35-2.05 1.04-.02 2.02.71 2.67.71.65 0 1.88-.87 3.17-.74.54.02 2.05.22 3.02 1.64-.08.05-1.8 1.05-1.77 3.2Zm-2.15-6.43c.56-.68.94-1.62.84-2.56-.81.03-1.79.54-2.38 1.22-.52.59-.97 1.55-.85 2.46.9.07 1.82-.46 2.39-1.12Z" />
@@ -91,7 +91,7 @@ export default function App() {
                   <strong>App Store</strong>
                 </span>
               </a>
-              <a className="store-btn playstore" href="https://play.google.com/store/apps/details?id=app.econiqo.com" aria-label="Descargar en Google Play">
+              {/* <a className="store-btn playstore" href="https://play.google.com/store/apps/details?id=app.econiqo.com" aria-label="Descargar en Google Play">
                 <span className="store-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
                     <polygon points="3,2 14,12 3,22" fill="#34A853" />
@@ -104,7 +104,7 @@ export default function App() {
                   <small>Disponible en</small>
                   <strong>Google Play</strong>
                 </span>
-              </a>
+              </a> */}
             </div>
           </div>
 
